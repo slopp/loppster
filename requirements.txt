@@ -5,3 +5,5 @@ numpy
 pandas
 dagster-dbt
 duckdb
+dbt-core
+dbt-duckdb
