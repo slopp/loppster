@@ -1,0 +1,125 @@
+---
+apiVersion: container.cnrm.cloud.google.com/v1beta1
+kind: ContainerCluster
+metadata:
+  annotations:
+    cnrm.cloud.google.com/project-id: myhybrid-200215
+  name: autopilot-cluster-1
+spec:
+  addonsConfig:
+    dnsCacheConfig:
+      enabled: true
+    gcePersistentDiskCsiDriverConfig:
+      enabled: true
+    gcpFilestoreCsiDriverConfig:
+      enabled: true
+    horizontalPodAutoscaling:
+      disabled: false
+    httpLoadBalancing:
+      disabled: false
+    networkPolicyConfig:
+      disabled: true
+  binaryAuthorization:
+    evaluationMode: DISABLED
+  clusterAutoscaling:
+    autoProvisioningDefaults:
+      imageType: COS_CONTAINERD
+      oauthScopes:
+      - https://www.googleapis.com/auth/devstorage.read_only
+      - https://www.googleapis.com/auth/logging.write
+      - https://www.googleapis.com/auth/monitoring
+      - https://www.googleapis.com/auth/service.management.readonly
+      - https://www.googleapis.com/auth/servicecontrol
+      - https://www.googleapis.com/auth/trace.append
+      serviceAccountRef:
+        external: default
+    autoscalingProfile: OPTIMIZE_UTILIZATION
+    enabled: true
+    resourceLimits:
+    - maximum: 1000000000
+      resourceType: cpu
+    - maximum: 1000000000
+      resourceType: memory
+    - maximum: 1000000000
+      resourceType: nvidia-tesla-t4
+    - maximum: 1000000000
+      resourceType: nvidia-tesla-a100
+  clusterIpv4Cidr: 10.8.0.0/17
+  clusterTelemetry:
+    type: ENABLED
+  databaseEncryption:
+    state: DECRYPTED
+  datapathProvider: ADVANCED_DATAPATH
+  defaultMaxPodsPerNode: 110
+  defaultSnatStatus:
+    disabled: false
+  enableAutopilot: true
+  enableIntranodeVisibility: true
+  enableShieldedNodes: true
+  ipAllocationPolicy:
+    clusterIpv4CidrBlock: 10.8.0.0/17
+    clusterSecondaryRangeName: gke-autopilot-cluster-1-pods-2bf3c3f0
+    servicesIpv4CidrBlock: 10.8.128.0/22
+    servicesSecondaryRangeName: gke-autopilot-cluster-1-services-2bf3c3f0
+  location: us-central1
+  loggingConfig:
+    enableComponents:
+    - SYSTEM_COMPONENTS
+    - WORKLOADS
+  loggingService: logging.googleapis.com/kubernetes
+  masterAuth:
+    clientCertificateConfig:
+      issueClientCertificate: false
+    clusterCaCertificate: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVMRENDQXBTZ0F3SUJBZ0lRTlh5ci9lSGM3TGdMVXpab3NUU201akFOQmdrcWhraUc5dzBCQVFzRkFEQXYKTVMwd0t3WURWUVFERXlRMlpXUXhaakE1T0MwME9ESm1MVFEwWVdNdE9XVXpOUzAxTkRZMk5qbGlNell6T0dRdwpJQmNOTWpJd09USXlNVGN3TlRVMldoZ1BNakExTWpBNU1UUXhPREExTlRaYU1DOHhMVEFyQmdOVkJBTVRKRFpsClpERm1NRGs0TFRRNE1tWXRORFJoWXkwNVpUTTFMVFUwTmpZMk9XSXpOak00WkRDQ0FhSXdEUVlKS29aSWh2Y04KQVFFQkJRQURnZ0dQQURDQ0FZb0NnZ0dCQUozSDRvVDJscnNIclNRTzhReUllVnJNQ3E4VEVKZzMwalc1UHdvdApHWUFmMjVqSlFTRlNVRnp3UXpaeGhzNkpsNEhmLytmUEtEQyt5SkhnTkpQdmhiRFZ1dUNvVUhoSkY4c3lKWmhnCnh6MjFmT1htcnJoazE4dHdNLzlpWHdCY3hTZGVtTWErT2JsbHBvR2NzbnFXajFoQ256MXFoM3BqWk12dnlid24KSWV2aU4ra29tT01xRXV0YlJDT2lhdUpLSTlWdENjUU1WeWprSFFzbWZxaTVjVXBqallCcVhZWGdDSS9YaGRXagp3VDlCanBtM282NVpGTFRKSmJ3YUxSVUpmcXNHSWV2dUZCcDhlamhWazd4T1gxbFhqWHU0RXUxckNsdDdwYkJMCk55QVFHbGREbklnUFJpUlJXdFZGMldvVjFpRjU2QldwQWpDZGVDalIxajlXUExmM0taamZDZGgwOGFXWWdXNGMKVG5uNXFMTjRRNjhRQVJ4UW9ocjBoclgzQ1BpZlN3Snd2VFBRVlNndTlBQVNuVlNHZ2cyVUg0V1NHcFRvUCtXagpqWFphcCtncTZJN25LWkRuenRHVk9vb3hFNHJYQ3N6cm1ySkdoc0MyS1hxWU9TRU5IRFZwZXoxZ21GU0RPWFNzCk9mYzlrdkx5K1hDbmN3QVhpM2hUN1E3Uzl3SURBUUFCbzBJd1FEQU9CZ05WSFE4QkFmOEVCQU1DQWdRd0R3WUQKVlIwVEFRSC9CQVV3QXdFQi96QWRCZ05WSFE0RUZnUVVPeDBmL1luSEpvZFdxbktRWmxkdGl6WTVQcDB3RFFZSgpLb1pJaHZjTkFRRUxCUUFEZ2dHQkFIaDJyend3WURtUGZZcXczV0dOdkZhdFplSWV3Z0NFYXdGZld2SGpERE1WCms2alVFek5wbFIzSHUvQlM5QmlyR24wMnJvZ1BqU3VxeUQvdXFneWNDcVdhL0ZTZUFiVUp3UTZZYkhUS2d6LzMKNGJWTjVxRnUzOGdPdnNlQnRhREhsZ05iUnB5TTV2UzlXLzU0WTVyN3dDNDc3RCtoSEhGYmhuWHJJNHZqMnJ0OQpYTk1CbUZyTUt5anIzNTRqQi9Uc2orVUhNUXBvcEV1T0pobEZuak1wRkNveHIrL3Y1MWVKNDhEaC9YUlN3RkZrClhSYzJ5WjQxWkhzVDVvemJHZkYrMzEwcTBjNlB3QnhSbG5tc1VpWklvKzk0dXBmcVI0K3c2VFRlamZCaGhYZGwKSDdLU0k2MUdrUDBwbHJaQ1M4QWk1WFRjZVh5aXlPRjEzbGoyMEcyUEU2Q284R3VSSVZYZWZWTG1qWStvMkhFZApNYWpVcVZCaG1Rbi9qTU50Ry8xMmZPSDNUNFY3ZXRBZzNWTTV1Z2lRR01TNjF6aC9uaXpsSVlXTGpWbnZ0eW1wCnF6bm96OHVtd1Q3dFp0aVdrQjVFSHNlSnQ0UjNPdkNGbHcwM2o3OEJubHkxY3gySXFkMzFzaEUrZ3RaSzVsbXAKei9aRDIyRFd0ZlJuVVJ5SWI3ZkNXUT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+  monitoringConfig:
+    enableComponents:
+    - SYSTEM_COMPONENTS
+  monitoringService: monitoring.googleapis.com/kubernetes
+  networkPolicy:
+    enabled: false
+    provider: PROVIDER_UNSPECIFIED
+  networkRef:
+    external: projects/myhybrid-200215/global/networks/default
+  networkingMode: VPC_NATIVE
+  nodeConfig:
+    diskSizeGb: 100
+    diskType: pd-standard
+    imageType: COS_CONTAINERD
+    machineType: e2-medium
+    metadata:
+      disable-legacy-endpoints: "true"
+    oauthScopes:
+    - https://www.googleapis.com/auth/monitoring
+    - https://www.googleapis.com/auth/service.management.readonly
+    - https://www.googleapis.com/auth/servicecontrol
+    - https://www.googleapis.com/auth/trace.append
+    - https://www.googleapis.com/auth/devstorage.read_only
+    - https://www.googleapis.com/auth/logging.write
+    serviceAccountRef:
+      external: default
+    shieldedInstanceConfig:
+      enableIntegrityMonitoring: true
+      enableSecureBoot: true
+    workloadMetadataConfig:
+      mode: GKE_METADATA
+      nodeMetadata: GKE_METADATA_SERVER
+  nodeLocations:
+  - us-central1-b
+  - us-central1-c
+  - us-central1-f
+  - us-central1-a
+  nodeVersion: 1.22.12-gke.300
+  notificationConfig:
+    pubsub:
+      enabled: false
+  podSecurityPolicyConfig:
+    enabled: false
+  releaseChannel:
+    channel: REGULAR
+  resourceID: autopilot-cluster-1
+  subnetworkRef:
+    external: projects/myhybrid-200215/regions/us-central1/subnetworks/default
+  verticalPodAutoscaling:
+    enabled: true
+  workloadIdentityConfig:
+    workloadPool: myhybrid-200215.svc.id.goog

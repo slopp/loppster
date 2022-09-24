@@ -1,0 +1,62 @@
+---
+apiVersion: compute.cnrm.cloud.google.com/v1beta1
+kind: ComputeInstance
+metadata:
+  annotations:
+    cnrm.cloud.google.com/project-id: myhybrid-200215
+  name: dagster-test
+spec:
+  bootDisk:
+    autoDelete: true
+    deviceName: dagster-test
+    initializeParams:
+      size: 10
+      sourceImageRef:
+        external: https://www.googleapis.com/compute/beta/projects/debian-cloud/global/images/debian-11-bullseye-v20220822
+      type: pd-balanced
+    mode: READ_WRITE
+    sourceDiskRef:
+      external: https://www.googleapis.com/compute/v1/projects/myhybrid-200215/zones/us-central1-a/disks/dagster-test
+  confidentialInstanceConfig:
+    enableConfidentialCompute: false
+  machineType: e2-medium
+  metadata:
+  - key: ssh-keys
+    value: |-
+      lopp_sean:ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBM/jnCkn3QYVasChQKuZjbwI2jT5WgpxcDe+KT57k94XxaybF6KdIA+I84njmPWbnwBgLfhJlmf1fXgNegdJqqg= google-ssh {"userName":"lopp.sean@gmail.com","expireOn":"2022-09-14T20:04:11+0000"}
+      lopp_sean:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAGzM0zNIAytpNK9FanzAh86fxyC6lTDqE+UGGb6VLtbQKq9NGfPza1fNprrZJDUVhJXx+t3Lgyz4bpyxdBFkeD8D+yNZIYZepyYnM0/d7tXg+kKZ6HjNmMs08XvFlhSIkpeq5HyUyn4FOrC3tKDvuVTOB8nhjpmkwtYJ/5mLM4WFa2BHqZrMVT8xdSXfIJjnjtRKeVgCfSC6m3Ff3Q0nhsnQN57xrlGFdSp5BSfl1dJ0dRDnkQzA7pswTOto3t1Rx7xCrEcj6xFAa6pSWFDV8Q0ZY2YxbqBIemI7J/lI2H2g6xXrHaXhDQ5vNxKW9XoOOlfAAFJLKHQbI8M7n7UwaDc= google-ssh {"userName":"lopp.sean@gmail.com","expireOn":"2022-09-14T20:04:26+0000"}
+  networkInterface:
+  - accessConfig:
+    - natIpRef:
+        external: 35.222.30.166
+      networkTier: PREMIUM
+    name: nic0
+    networkIpRef:
+      external: 10.128.0.2
+    networkRef:
+      external: https://www.googleapis.com/compute/v1/projects/myhybrid-200215/global/networks/default
+    stackType: IPV4_ONLY
+    subnetworkProject: myhybrid-200215
+    subnetworkRef:
+      external: https://www.googleapis.com/compute/v1/projects/myhybrid-200215/regions/us-central1/subnetworks/default
+  reservationAffinity:
+    type: ANY_RESERVATION
+  resourceID: dagster-test
+  scheduling:
+    automaticRestart: true
+    onHostMaintenance: MIGRATE
+    provisioningModel: STANDARD
+  serviceAccount:
+    scopes:
+    - https://www.googleapis.com/auth/devstorage.read_only
+    - https://www.googleapis.com/auth/logging.write
+    - https://www.googleapis.com/auth/monitoring.write
+    - https://www.googleapis.com/auth/service.management.readonly
+    - https://www.googleapis.com/auth/servicecontrol
+    - https://www.googleapis.com/auth/trace.append
+    serviceAccountRef:
+      external: 811245043115-compute@developer.gserviceaccount.com
+  shieldedInstanceConfig:
+    enableIntegrityMonitoring: true
+    enableVtpm: true
+  zone: us-central1-a
