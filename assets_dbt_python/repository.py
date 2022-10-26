@@ -52,7 +52,7 @@ forecast_job = define_asset_job("refresh_forecast_model_job", selection="*order_
 analytics_job = define_asset_job("refresh_analytics_model_job", selection=AssetSelection.keys(["duckdb", "dbt_schema", "daily_order_summary"]).upstream())
 predict_job = define_asset_job("predict_job", selection=AssetSelection.keys(["duckdb", "forecasting","predicted_orders"]))
 
-@asset_sensor(asset_key=AssetKey("orders_augmented"), job = predict_job)
+@asset_sensor(asset_key=AssetKey(["duckdb", "dbt_schema", "orders_augmented"]), job = predict_job)
 def orders_sensor(context: SensorEvaluationContext, asset_event: EventLogEntry):
     yield RunRequest(
         run_key = context.cursor
