@@ -5,12 +5,18 @@ from assets_dbt_python.resources import duckdb_io_manager
 from dagster_dbt import dbt_cli_resource, load_assets_from_dbt_project
 
 from dagster import (
+    AssetSelection,
+    EventLogEntry,
+    RunRequest,
     ScheduleDefinition,
+    SensorEvaluationContext,
+    asset_sensor,
     define_asset_job,
     fs_io_manager,
     load_assets_from_package_module,
     repository,
     with_resources,
+    AssetKey
 )
 from dagster._utils import file_relative_path
 
@@ -43,7 +49,14 @@ forecasting_assets = load_assets_from_package_module(
 # define jobs as selections over the larger graph
 everything_job = define_asset_job("everything_everywhere_job", selection="*")
 forecast_job = define_asset_job("refresh_forecast_model_job", selection="*order_forecast_model")
+analytics_job = define_asset_job("refresh_analytics_model_job", selection=AssetSelection.keys(["duckdb", "dbt_schema", "daily_order_summary"]).upstream())
+predict_job = define_asset_job("predict_job", selection=AssetSelection.keys(["duckdb", "forecasting","predicted_orders"]))
 
+@asset_sensor(asset_key=AssetKey("orders_augmented"), job = predict_job)
+def orders_sensor(context: SensorEvaluationContext, asset_event: EventLogEntry):
+    yield RunRequest(
+        run_key = context.cursor
+    )
 
 @repository
 def assets_dbt_python():
@@ -62,7 +75,9 @@ def assets_dbt_python():
             ),
         },
     ) + [
-        # run everything once a week, but update the forecast model daily
         ScheduleDefinition(job=everything_job, cron_schedule="@weekly"),
         ScheduleDefinition(job=forecast_job, cron_schedule="@daily"),
+        ScheduleDefinition(job=analytics_job, cron_schedule="0 * * * *")
+    ] + [ 
+    orders_sensor 
     ]
