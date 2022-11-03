@@ -16,7 +16,8 @@ from dagster import (
     load_assets_from_package_module,
     repository,
     with_resources,
-    AssetKey
+    AssetKey, 
+    asset
 )
 from dagster._utils import file_relative_path
 
@@ -58,10 +59,14 @@ def orders_sensor(context: SensorEvaluationContext, asset_event: EventLogEntry):
         run_key = context.cursor
     )
 
+@asset
+def my_asset():
+    pass 
+
 @repository
 def assets_dbt_python():
     return with_resources(
-        dbt_assets + raw_data_assets + forecasting_assets,
+        dbt_assets + raw_data_assets + forecasting_assets + [my_asset],
         resource_defs={
             # this io_manager allows us to load dbt models as pandas dataframes
             "io_manager": duckdb_io_manager.configured(
